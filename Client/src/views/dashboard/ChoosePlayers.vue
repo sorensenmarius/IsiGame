@@ -27,6 +27,12 @@
               >
             </v-avatar>
             <span class="choose-players-chip-text">{{ p.name }}</span>
+            <span
+              v-if="isChosen(p)"
+              class="choose-players-number"
+            >
+              {{ getChosenPlayerNumber(p) + 1 }}.
+            </span>
           </v-chip>
         </v-col>
       </v-row>
@@ -73,6 +79,9 @@
       addGame: function () {
         this.$emit('playersChosen', this.chosenPlayers)
       },
+      getChosenPlayerNumber: function (player) {
+        return this.chosenPlayers.indexOf(player)
+      },
     },
   }
 </script>
@@ -81,11 +90,13 @@
   .choose-players-chip {
     width: 100%;
   }
-  .chosen-players-chip {
-    width: 75%;
-  }
   .choose-players-chip-text {
     font-size: 12px;
+  }
+  .choose-players-number {
+    position: absolute;
+    right: 10px;
+    font-size: 15px;
   }
   .chosen-role {
     line-height: 32px;
