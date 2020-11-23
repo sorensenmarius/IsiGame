@@ -28,7 +28,7 @@ router.route('/create').post(async (req, res, next) => {
         if(error) {
             return next(error)
         } else {
-            await utils.addGameToPlayers(gameObject.players)
+            await utils.addGameToPlayers(gameObject.players, data)
             res.json(data)
         }
     })

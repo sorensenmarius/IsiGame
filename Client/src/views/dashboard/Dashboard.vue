@@ -51,7 +51,13 @@
         this.$store.dispatch('getAllPlayersFromApi')
       },
       generateGame (players) {
-        console.log(players)
+        this.$http.post('game/create', {
+          players: players,
+        }).then(() => {
+          this.$emit('update:showModal', false)
+        }).catch((e) => {
+          console.error(e)
+        })
       },
     },
   }

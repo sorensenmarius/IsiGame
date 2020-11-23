@@ -32,29 +32,16 @@ async function deleteGameFromPlayers(data) {
     })
 }
 
-async function addGameToPlayers(players) {
+async function addGameToPlayers(players, data) {
     players = await updateRating(players)
 
-    PlayerModel.updateMany({ _id: {$in: winnerTeam}}, {
-        $push: {
-            games: data._id
-        },
-        $inc: {
-            wins: 1
-        }
-    }, (err) => {
-        if(err) {
-            return next(err)
-        }
-    })
-    PlayerModel.updateMany({ _id: {$in: loserTeam}}, {
-        $push: {
-            games: data._id
-        }
-    }, (err) => {
-        if(err) {
-            return next(err)
-        }
+    players.forEach((p, i) => {
+        PlayerModel.findById(p._id).exec((error, player) => {
+            if (i == 0) player.wins++;
+            player.games.push(data._id)
+            player.rating = p.rating
+            player.save()
+        })
     })
 }
 
@@ -66,8 +53,8 @@ async function updateRating(players) {
 
     elo.calculateELOs();
 
-    elo.players.forEach((eloPlayer) => {
-        players.find(player => player._id === eloPlayer).rating = p.eloPost
+    elo.players.forEach((p) => {
+        players.find(player => player._id === p.name).rating = p.eloPost
     });
 
     return players
